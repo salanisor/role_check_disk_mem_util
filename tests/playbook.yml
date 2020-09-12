@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - role_check_disk_mem_util

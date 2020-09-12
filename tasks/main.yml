@@ -1,0 +1,38 @@
+---
+# tasks file for role_check_disk_mem_util
+- name: check memory utilization %
+  mempercent:
+  register: memory
+  when: ansible_distribution == "Fedora" or
+        ansible_distribution == "CentOS"
+
+- name: check disk utilization %
+  block:
+  - diskpercent_fedora:
+      path: "{{ item }}"
+    with_items:
+      - /
+      - /tmp
+    register: disk_fedora
+  # Note that of Ansible 2.9 |changed will no longer work
+  # Reason for making the change to .changed
+  - name: message when volumes threshold exceeded
+    debug:
+      msg: "Utilization exceeded the threshold"
+    when: disk_fedora.changed
+  when: ansible_distribution == "Fedora" or
+        ansible_distribution == "CentOS"
+
+- name: check disk utilization %
+  block:
+    - diskpercent_rhel:
+        path: "{{ item }}"
+      with_items:
+        - /
+        - /tmp
+      register: disk_rhel
+    - name: message when volumes threshold exceeded
+      debug:
+        msg: "Utilization exceeded the threshold"
+      when: disk_rhel.changed
+  when: ansible_distribution == "RedHat"

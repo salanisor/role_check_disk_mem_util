@@ -1,0 +1,7 @@
+---
+- name: converge
+  hosts: all
+  become: true
+  roles:
+    - role: role_check_disk_mem_util
+  post_tasks: []

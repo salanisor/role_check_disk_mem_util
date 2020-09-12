@@ -1,0 +1,4 @@
+---
+# defaults file for role_check_disk_mem_util
+disk_threshold: false
+mem_threshold: false
